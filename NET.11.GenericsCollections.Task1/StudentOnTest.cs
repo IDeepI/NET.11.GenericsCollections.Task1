@@ -20,7 +20,7 @@ namespace NET._11.GenericsCollections.Task1
         /// </summary>
         public DateTime TestDate { get; set; }
         /// <summary>
-        /// Оценка затест
+        /// Оценка за тест
         /// </summary>
         public byte Assessment { get; set; }
         /// <summary>

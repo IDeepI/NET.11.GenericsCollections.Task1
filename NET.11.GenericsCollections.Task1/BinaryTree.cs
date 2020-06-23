@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,8 +11,60 @@ namespace NET._11.GenericsCollections.Task1
     /// Бинарное дерево
     /// </summary>
     /// <typeparam name="T">Тип данных хранящихся в узлах</typeparam>
-    public class BinaryTree<T> where T : IComparable
+    public class BinaryTree<T>: IEnumerable<T>
+        where T : IComparable
     {
+        /// <summary>
+        /// Стандартный конструктор
+        /// </summary>
+        public BinaryTree() : this(null, null)
+        {
+
+        }
+        /// <summary>
+        /// Применяет делегат для сравнения добавляемых в дерево элементов
+        /// </summary>
+        /// <param name="delegateCompareTo"> Объект стандартного обобщённого типа, для сравнения двух объектов одного типа </param>
+        public BinaryTree(Func<T, T, int> delegateCompareTo) : this(null, delegateCompareTo)
+        {
+        }
+        /// <summary>
+        /// Добавляет элементы коллекции в дерево 
+        /// </summary>
+        /// <param name="ts"> Объект типа стандартной обобщенной коллекции </param>
+        public BinaryTree(IEnumerable<T> ts) : this(ts, null)
+        {
+        }
+
+        // Делегат для метода сравнения
+        Func<T, T, int> CompareNodeTo = null;
+
+        /// <summary>
+        /// Добавляет элементы коллекции в дерево 
+        /// Применяет делегат для сравнения добавляемых в дерево элементов
+        /// </summary>
+        /// <param name="ts"> Объект типа стандартной обобщенной коллекции </param>
+        /// <param name="delegateCompareTo"> Объект стандартного обобщённого типа, для сравнения двух объектов одного типа </param>
+        public BinaryTree(IEnumerable<T> ts, Func<T, T, int> delegateCompareTo)
+        {
+            if (ts != null)
+            {
+                foreach (var item in ts)
+                {
+                    Add(item);
+                }
+            }
+            
+            if (delegateCompareTo != null)
+            {
+                CompareNodeTo = delegateCompareTo;
+            }
+            else
+            {
+                CompareNodeTo = (thisNode, otherNode) => thisNode.CompareTo(otherNode);
+            }
+        }
+
         /// <summary>
         /// Корень бинарного дерева
         /// </summary>
@@ -34,7 +87,7 @@ namespace NET._11.GenericsCollections.Task1
             currentNode = currentNode ?? RootNode;
             node.ParentNode = currentNode;
             int result;
-            return (result = node.Data.CompareTo(currentNode.Data)) == 0
+            return (result = CompareNodeTo(node.Data, currentNode.Data)) == 0
                 ? currentNode
                 : result < 0
                     ? currentNode.LeftNode == null
@@ -65,7 +118,7 @@ namespace NET._11.GenericsCollections.Task1
         {
             startWithNode = startWithNode ?? RootNode;
             int result;
-            return (result = data.CompareTo(startWithNode.Data)) == 0
+            return (result = CompareNodeTo(data, startWithNode.Data)) == 0
                 ? startWithNode
                 : result < 0
                     ? startWithNode.LeftNode == null
@@ -196,5 +249,19 @@ namespace NET._11.GenericsCollections.Task1
             }
         }
 
+        public IEnumerator<T> GetEnumerator()
+        {
+            throw new NotImplementedException();
+        } 
+        
+        public IEnumerator<T> GetReverseEnumerator()
+        {
+            throw new NotImplementedException();
+        }
+
+        IEnumerator IEnumerable.GetEnumerator()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

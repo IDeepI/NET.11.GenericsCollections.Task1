@@ -65,5 +65,16 @@ namespace NET._11.GenericsCollections.Task1
         /// </summary>
         /// <returns>Данные узла дерева</returns>
         public override string ToString() => Data.ToString();
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="other"></param>
+        /// <returns></returns>
+        public int CompareTo(BinaryTreeNode<T> other)
+        {
+            if (other == null) return 1;
+            // Сравниваем оценки
+            return Data.CompareTo(other);
+        }
     }
 }
