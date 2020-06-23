@@ -22,6 +22,20 @@ namespace NET._11.GenericsCollections.Task1
             binaryTree.Add(14);
             binaryTree.Add(16);
 
+            foreach (var item in binaryTree)
+            {
+                Console.WriteLine($" {item} ");
+            }
+
+            Console.WriteLine(new string('-', 40));
+
+            foreach (var item in binaryTree.GetReverseEnumerator())
+            {
+                Console.WriteLine($" {item} ");
+            }
+
+            Console.WriteLine(new string('-', 40));
+
             binaryTree.PrintTree();
 
             Console.WriteLine(new string('-', 40));

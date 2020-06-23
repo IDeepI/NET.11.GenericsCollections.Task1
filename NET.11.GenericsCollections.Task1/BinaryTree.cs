@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace NET._11.GenericsCollections.Task1
 {
@@ -11,7 +8,7 @@ namespace NET._11.GenericsCollections.Task1
     /// Бинарное дерево
     /// </summary>
     /// <typeparam name="T">Тип данных хранящихся в узлах</typeparam>
-    public class BinaryTree<T>: IEnumerable<T>
+    public class BinaryTree<T> : IEnumerable<T>
         where T : IComparable
     {
         /// <summary>
@@ -19,8 +16,8 @@ namespace NET._11.GenericsCollections.Task1
         /// </summary>
         public BinaryTree() : this(null, null)
         {
-
         }
+
         /// <summary>
         /// Применяет делегат для сравнения добавляемых в дерево элементов
         /// </summary>
@@ -28,8 +25,9 @@ namespace NET._11.GenericsCollections.Task1
         public BinaryTree(Func<T, T, int> delegateCompareTo) : this(null, delegateCompareTo)
         {
         }
+
         /// <summary>
-        /// Добавляет элементы коллекции в дерево 
+        /// Добавляет элементы коллекции в дерево
         /// </summary>
         /// <param name="ts"> Объект типа стандартной обобщенной коллекции </param>
         public BinaryTree(IEnumerable<T> ts) : this(ts, null)
@@ -37,10 +35,10 @@ namespace NET._11.GenericsCollections.Task1
         }
 
         // Делегат для метода сравнения
-        Func<T, T, int> CompareNodeTo = null;
+        private Func<T, T, int> CompareNodeTo = null;
 
         /// <summary>
-        /// Добавляет элементы коллекции в дерево 
+        /// Добавляет элементы коллекции в дерево
         /// Применяет делегат для сравнения добавляемых в дерево элементов
         /// </summary>
         /// <param name="ts"> Объект типа стандартной обобщенной коллекции </param>
@@ -54,7 +52,7 @@ namespace NET._11.GenericsCollections.Task1
                     Add(item);
                 }
             }
-            
+
             if (delegateCompareTo != null)
             {
                 CompareNodeTo = delegateCompareTo;
@@ -128,7 +126,6 @@ namespace NET._11.GenericsCollections.Task1
                         ? null
                         : FindNode(data, startWithNode.RightNode);
         }
-              
 
         /// <summary>
         /// Удаление узла бинарного дерева
@@ -154,7 +151,7 @@ namespace NET._11.GenericsCollections.Task1
                     node.ParentNode.RightNode = null;
                 }
             }
-            //если нет левого, то правый ставим на место удаляемого 
+            //если нет левого, то правый ставим на место удаляемого
             else if (node.LeftNode == null)
             {
                 if (currentNodeSide == Side.Left)
@@ -168,7 +165,7 @@ namespace NET._11.GenericsCollections.Task1
 
                 node.RightNode.ParentNode = node.ParentNode;
             }
-            //если нет правого, то левый ставим на место удаляемого 
+            //если нет правого, то левый ставим на место удаляемого
             else if (node.RightNode == null)
             {
                 if (currentNodeSide == Side.Left)
@@ -182,7 +179,7 @@ namespace NET._11.GenericsCollections.Task1
 
                 node.LeftNode.ParentNode = node.ParentNode;
             }
-            //если оба дочерних присутствуют, 
+            //если оба дочерних присутствуют,
             //то правый становится на место удаляемого,
             //а левый вставляется в правый
             else
@@ -194,11 +191,13 @@ namespace NET._11.GenericsCollections.Task1
                         node.RightNode.ParentNode = node.ParentNode;
                         Add(node.LeftNode, node.RightNode);
                         break;
+
                     case Side.Right:
                         node.ParentNode.RightNode = node.RightNode;
                         node.RightNode.ParentNode = node.ParentNode;
                         Add(node.LeftNode, node.RightNode);
                         break;
+
                     default:
                         var bufLeft = node.LeftNode;
                         var bufRightLeft = node.RightNode.LeftNode;
@@ -249,19 +248,46 @@ namespace NET._11.GenericsCollections.Task1
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns></returns>
         public IEnumerator<T> GetEnumerator()
         {
-            throw new NotImplementedException();
-        } 
-        
-        public IEnumerator<T> GetReverseEnumerator()
+            List<T> binaryTreeNodes = new List<T>();
+            GetTreeNodes(RootNode, binaryTreeNodes);
+
+            foreach (var item in binaryTreeNodes)
+            {
+                yield return item;
+            }
+        }
+
+        private void GetTreeNodes(BinaryTreeNode<T> nextNode, List<T> binaryTreeNodes)
         {
-            throw new NotImplementedException();
+            if (nextNode != null)
+            {
+                binaryTreeNodes.Add(nextNode.Data);
+                //рекурсивный вызов для левой и правой веток
+                GetTreeNodes(nextNode.LeftNode, binaryTreeNodes);
+                GetTreeNodes(nextNode.RightNode, binaryTreeNodes);
+            }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            throw new NotImplementedException();
+            return GetEnumerator();
+        }
+
+        public IEnumerable<T> GetReverseEnumerator()
+        {
+            List<T> binaryTreeNodes = new List<T>();
+            GetTreeNodes(RootNode, binaryTreeNodes);
+
+            for (int i = binaryTreeNodes.Count - 1; i >= 0; i--)
+            {
+                yield return binaryTreeNodes[i];
+            }            
         }
     }
 }
