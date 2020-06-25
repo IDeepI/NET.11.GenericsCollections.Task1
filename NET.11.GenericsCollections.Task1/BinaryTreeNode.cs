@@ -19,7 +19,7 @@ namespace NET._11.GenericsCollections.Task1
     /// Узел бинарного дерева
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public class BinaryTreeNode<T> where T : IComparable
+    public class BinaryTreeNode<T> where T : IComparable<T>
     {
         /// <summary>
         /// Конструктор класса
@@ -74,7 +74,7 @@ namespace NET._11.GenericsCollections.Task1
         {
             if (other == null) return 1;
             // Сравниваем оценки
-            return Data.CompareTo(other);
+            return Data.CompareTo(other.Data);
         }
     }
 }

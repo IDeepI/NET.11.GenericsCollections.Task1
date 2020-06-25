@@ -34,5 +34,13 @@ namespace NET._11.GenericsCollections.Task1
             // Сравниваем оценки
             return Assessment.CompareTo(other.Assessment);
         }
+        /// <summary>
+        /// Переопределяю ToString для печати
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"Студент { Name }, на тесте { TestName }, проходившем { TestDate:d}, получил оценку - { Assessment }.";
+        }
     }
 }

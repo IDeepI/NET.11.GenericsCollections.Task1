@@ -9,7 +9,7 @@ namespace NET._11.GenericsCollections.Task1
     /// </summary>
     /// <typeparam name="T">Тип данных хранящихся в узлах</typeparam>
     public class BinaryTree<T> : IEnumerable<T>
-        where T : IComparable
+        where T : IComparable<T>
     {
         /// <summary>
         /// Стандартный конструктор
@@ -45,14 +45,6 @@ namespace NET._11.GenericsCollections.Task1
         /// <param name="delegateCompareTo"> Объект стандартного обобщённого типа, для сравнения двух объектов одного типа </param>
         public BinaryTree(IEnumerable<T> ts, Func<T, T, int> delegateCompareTo)
         {
-            if (ts != null)
-            {
-                foreach (var item in ts)
-                {
-                    Add(item);
-                }
-            }
-
             if (delegateCompareTo != null)
             {
                 CompareNodeTo = delegateCompareTo;
@@ -60,6 +52,14 @@ namespace NET._11.GenericsCollections.Task1
             else
             {
                 CompareNodeTo = (thisNode, otherNode) => thisNode.CompareTo(otherNode);
+            }
+
+            if (ts != null)
+            {
+                foreach (var item in ts)
+                {
+                    Add(item);
+                }
             }
         }
 
@@ -76,6 +76,11 @@ namespace NET._11.GenericsCollections.Task1
         /// <returns>Узел</returns>
         public BinaryTreeNode<T> Add(BinaryTreeNode<T> node, BinaryTreeNode<T> currentNode = null)
         {
+            if (node == null)
+            {
+                throw new ArgumentException("Вносимый узел не может быть null");
+            }
+
             if (RootNode == null)
             {
                 node.ParentNode = null;
@@ -287,7 +292,7 @@ namespace NET._11.GenericsCollections.Task1
             for (int i = binaryTreeNodes.Count - 1; i >= 0; i--)
             {
                 yield return binaryTreeNodes[i];
-            }            
+            }
         }
     }
 }
